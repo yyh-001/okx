@@ -1,0 +1,68 @@
+name: OKX Trader Monitor
+
+on:
+  push:
+    branches: [ main ]
+  schedule:
+    # 每1分钟运行一次监控任务
+    - cron: '* * * * *'
+  workflow_dispatch: # 允许手动触发
+
+jobs:
+  monitor-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        cache: 'npm'
+
+    - name: Install dependencies
+      run: |
+        npm install
+        cd frontend && npm install
+
+    - name: Run monitoring task
+      env:
+        SMTP_HOST: ${{ secrets.SMTP_HOST }}
+        SMTP_PORT: ${{ secrets.SMTP_PORT }}
+        SMTP_USER: ${{ secrets.SMTP_USER }}
+        SMTP_PASS: ${{ secrets.SMTP_PASS }}
+        NOTIFICATION_EMAIL: ${{ secrets.NOTIFICATION_EMAIL }}
+      run: |
+        echo "开始执行监控任务..."
+        node scripts/monitor-task.js
+        echo "监控任务完成"
+
+    - name: Build frontend
+      run: |
+        echo "构建前端..."
+        npm run client:build
+        echo "前端构建完成"
+
+    - name: Commit data changes
+      run: |
+        git config --local user.email "action@github.com"
+        git config --local user.name "GitHub Action"
+        git add data/ frontend/dist/data/ || true
+        git diff --staged --quiet || git commit -m "Update monitoring data - $(date)"
+
+    - name: Push changes
+      uses: ad-m/github-push-action@master
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        branch: main
+
+    - name: Deploy to GitHub Pages
+      uses: peaceiris/actions-gh-pages@v3
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        publish_dir: ./frontend/dist
+        cname: # 如果有自定义域名，在这里填写
