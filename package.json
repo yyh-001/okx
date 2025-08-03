@@ -1,0 +1,50 @@
+{
+  "name": "okx-trader-monitor",
+  "version": "1.0.0",
+  "description": "OKX交易员带单监控系统",
+  "main": "dist/server.js",
+  "scripts": {
+    "dev": "concurrently \"npm run server:dev\" \"npm run client:dev\"",
+    "build": "npm run client:build && npm run server:build",
+    "start": "node dist/server.js",
+    "server:dev": "nodemon --exec ts-node src/server.ts",
+    "server:build": "tsc",
+    "client:dev": "cd frontend && npm run dev",
+    "client:build": "cd frontend && npm run build",
+    "client:install": "cd frontend && npm install",
+    "postinstall": "npm run client:install",
+    "vercel-build": "npm run build"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "cors": "^2.8.5",
+    "helmet": "^7.1.0",
+    "dotenv": "^16.3.1",
+    "axios": "^1.6.2",
+    "node-cron": "^3.0.3",
+    "nodemailer": "^6.9.7",
+    "sqlite3": "^5.1.6",
+    "crypto": "^1.0.1",
+    "winston": "^3.11.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.10.4",
+    "@types/express": "^4.17.21",
+    "@types/cors": "^2.8.17",
+    "@types/node-cron": "^3.0.11",
+    "@types/nodemailer": "^6.4.14",
+    "typescript": "^5.3.3",
+    "ts-node": "^10.9.1",
+    "nodemon": "^3.0.2",
+    "concurrently": "^8.2.2"
+  },
+  "keywords": [
+    "okx",
+    "trading",
+    "copy-trading",
+    "monitor",
+    "cryptocurrency"
+  ],
+  "author": "Your Name",
+  "license": "MIT"
+}
