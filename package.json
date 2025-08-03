@@ -24,6 +24,7 @@
     "node-cron": "^3.0.3",
     "nodemailer": "^6.9.7",
     "sqlite3": "^5.1.6",
+    "pg": "^8.11.3",
     "crypto": "^1.0.1",
     "winston": "^3.11.0"
   },
@@ -33,6 +34,7 @@
     "@types/cors": "^2.8.17",
     "@types/node-cron": "^3.0.11",
     "@types/nodemailer": "^6.4.14",
+    "@types/pg": "^8.10.9",
     "typescript": "^5.3.3",
     "ts-node": "^10.9.1",
     "nodemon": "^3.0.2",
